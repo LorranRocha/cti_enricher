@@ -56,11 +56,7 @@ pip install -r requirements.txt
 
 ## Configuration
 
-Copy the example config file and add your API keys:
-
-```bash
-cp config.yml.example config.yml
-```
+Add your API keys on config.yml:
 
 Example:
 
