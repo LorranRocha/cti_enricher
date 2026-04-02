@@ -13,7 +13,6 @@ def check_otx(ioc, ioc_type, api_key):
     }
 
     endpoint = endpoint_map.get(ioc_type)
-
     if not endpoint:
         return None
 
@@ -21,8 +20,8 @@ def check_otx(ioc, ioc_type, api_key):
     headers = {"X-OTX-API-KEY": api_key}
 
     try:
-        r = requests.get(url, headers=headers, timeout=10)
-        data = r.json()
+        response = requests.get(url, headers=headers, timeout=10)
+        data = response.json()
 
         pulse_info = data.get("pulse_info", {})
         pulses = pulse_info.get("pulses", [])
@@ -30,13 +29,30 @@ def check_otx(ioc, ioc_type, api_key):
         if not pulses:
             return None
 
+        campaigns = []
+        tags = []
+        references = []
+
+        for pulse in pulses:
+            name = pulse.get("name")
+            if name and name not in campaigns:
+                campaigns.append(name)
+
+            for tag in pulse.get("tags", []):
+                if tag and tag not in tags:
+                    tags.append(tag)
+
+            reference = pulse.get("reference")
+            if reference and reference not in references:
+                references.append(reference)
+
         return {
             "source": "OTX",
             "malicious": True,
             "confidence": pulse_info.get("count", 0),
-            "campaigns": [p.get("name") for p in pulses if p.get("name")],
-            "tags": [t for p in pulses for t in p.get("tags", [])],
-            "references": [p.get("reference") for p in pulses if p.get("reference")],
+            "campaigns": campaigns[:5],
+            "tags": tags[:10],
+            "references": references[:5],
         }
 
     except Exception:
