@@ -1,4 +1,4 @@
-import argparse
+mport argparse
 import json
 import sys
 
@@ -50,7 +50,7 @@ def analyse_ioc(ioc, config):
     if otx_result:
         sources.append(otx_result)
 
-    abusech_result = check_abusech(ioc, ioc_type)
+    abusech_result = check_abusech(ioc, ioc_type, config["abusech"]["api_key"])
     if abusech_result:
         sources.append(abusech_result)
 
