@@ -1,0 +1,8 @@
+virustotal:
+  api_key: "YOUR_API_KEY"
+
+otx:
+  api_key: "YOUR_API_KEY"
+
+abusech:
+  api_key: ""
