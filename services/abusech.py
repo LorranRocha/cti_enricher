@@ -1,7 +1,10 @@
 import requests
 
 
-def check_abusech(ioc):
+def check_abusech(ioc, ioc_type):
+    if ioc_type not in ["md5", "sha1", "sha256"]:
+        return None
+
     url = "https://mb-api.abuse.ch/api/v1/"
     data = {"query": "get_info", "hash": ioc}
 
@@ -17,8 +20,8 @@ def check_abusech(ioc):
         return {
             "source": "Abuse.ch",
             "malicious": True,
-            "campaign": entry.get("signature"),
-            "tags": [entry.get("file_type"), entry.get("signature")]
+            "campaigns": [entry.get("signature")],
+            "tags": [entry.get("file_type"), entry.get("signature")],
         }
 
     except Exception:
